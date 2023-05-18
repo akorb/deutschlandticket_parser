@@ -58,10 +58,11 @@ class VdvKa:
         assert (certificate_bytes.completely_processed())
 
     def print(self):
-        print(f'Signature:      {self.signature.hex(" ")}\n'
-              f'Version:        {self.version.hex(" ")}\n'
-              f'CV certificate: {self.cv_certificate.hex(" ")}\n'
-              f'CAR:            {self.car.hex(" ")}')
+        print(f'Signature:            {self.signature.hex(" ")}\n'
+              f'Version:              {self.version.hex(" ")}\n'
+              f'Cert signature:       {self.cert_signature.hex(" ")}\n'
+              f'Cert Public Exponent: {self.cert_pub_exponent}\n'
+              f'CAR:                  {self.car.hex(" ")}')
 
 
 def main():
