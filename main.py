@@ -21,17 +21,24 @@ class VdvKa:
     def __init__(self, blob: bytes):
         file_bytes = ByteStringTaker(blob)
         self.tag_signature = file_bytes.take(1)
+        assert (self.tag_signature == b'\x9e')
         self.length_signature = file_bytes.take(2)[1]
+        assert (self.length_signature == 128)
         self.signature = file_bytes.take(self.length_signature)
         self.tag_remaining_data = file_bytes.take(1)
+        assert (self.tag_remaining_data == b'\x9a')
         self.remaining_data_length = file_bytes.take(1)[0]
         self.remaining_data = file_bytes.take(max(self.remaining_data_length, 5))
         self.version = self.remaining_data[-2:]
         self.tag_cv_certificate = file_bytes.take(2)
+        assert (self.tag_cv_certificate == b'\x7f\x21')
         self.length_cv_certificate = file_bytes.take(2)[1]
+        assert (self.length_cv_certificate == 200)
         self.cv_certificate = file_bytes.take(self.length_cv_certificate)
         self.tag_car = file_bytes.take(1)
+        assert (self.tag_car == b'\x42')
         self.length_car = file_bytes.take(1)[0]
+        assert (self.length_car == 8)
         self.car = file_bytes.take(self.length_car)
 
         assert (file_bytes.completely_processed())
