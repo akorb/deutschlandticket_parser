@@ -45,11 +45,15 @@ class VdvKa:
 
         certificate_bytes = ByteStringTaker(self.cv_certificate)
         cert_tag = certificate_bytes.take(2)
+        assert (cert_tag == b'\x5f\x37')
         cert_length = certificate_bytes.take(2)[1]
-        cert_signature = certificate_bytes.take(cert_length)
+        assert (cert_length == 192)
+        self.cert_signature = certificate_bytes.take(cert_length)
         cert_pub_exponent_tag = certificate_bytes.take(2)
+        assert (cert_pub_exponent_tag == b'\x5f\x38')
         cert_pub_exponent_length = certificate_bytes.take(1)[0]
-        cert_pub_exponent = certificate_bytes.take(cert_pub_exponent_length)
+        assert (cert_pub_exponent_length == 1)
+        self.cert_pub_exponent = certificate_bytes.take(cert_pub_exponent_length)[0]
 
         assert (certificate_bytes.completely_processed())
 
