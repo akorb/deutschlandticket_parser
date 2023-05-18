@@ -1,7 +1,3 @@
-# https://docplayer.org/61642532-Spezifikation-statischer-berechtigungen-fuer-2d-barcode-tickets.html
-# Page 16
-
-
 class ByteStringTaker:
     __slots__ = ['unprocessed_data']
 
@@ -18,6 +14,12 @@ class ByteStringTaker:
 
 
 class VdvKa:
+    """
+    The Deutschlandticket QR code is distributed with the
+    VDV-Kernapplikation (VDV-KA) file format.
+    See: https://docplayer.org/61642532-Spezifikation-statischer-berechtigungen-fuer-2d-barcode-tickets.html
+    Section 4.3
+    """
     def __init__(self, blob: bytes):
         file_bytes = ByteStringTaker(blob)
         self.tag_signature = file_bytes.take(1)
