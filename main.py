@@ -62,7 +62,7 @@ class VdvKa:
 
 
 def main():
-    with open('qr.bin', 'rb') as f:
+    with open('aztec.bin', 'rb') as f:
         content = f.read()
 
     vdv_ka = VdvKa(content)
