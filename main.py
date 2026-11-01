@@ -21,11 +21,11 @@ class VdvKa:
         self.length_signature = file_bytes.take(2)[1]
         assert (self.length_signature == 128)
         self.signature = file_bytes.take(self.length_signature)
-        self.tag_remaining_data = file_bytes.take(1)
-        assert (self.tag_remaining_data == b'\x9a')
-        self.remaining_data_length = file_bytes.take(1)[0]
-        self.remaining_data = file_bytes.take(max(self.remaining_data_length, 5))
-        self.version = self.remaining_data[-2:]
+        self.tag_signature_remainder = file_bytes.take(1)
+        assert (self.tag_signature_remainder == b'\x9a')
+        self.signature_remainder_length = file_bytes.take(1)[0]
+        self.signature_remainder = file_bytes.take(max(self.signature_remainder_length, 5))
+        self.version = self.signature_remainder[-2:]
         self.tag_cv_certificate = file_bytes.take(2)
         assert (self.tag_cv_certificate == b'\x7f\x21')
         self.length_cv_certificate = file_bytes.take(2)[1]
@@ -45,11 +45,10 @@ class VdvKa:
         cert_length = certificate_bytes.take(2)[1]
         assert (cert_length == 192)
         self.cert_signature = certificate_bytes.take(cert_length)
-        cert_pub_exponent_tag = certificate_bytes.take(2)
-        assert (cert_pub_exponent_tag == b'\x5f\x38')
-        cert_pub_exponent_length = certificate_bytes.take(1)[0]
-        assert (cert_pub_exponent_length == 1)
-        self.cert_pub_exponent = certificate_bytes.take(cert_pub_exponent_length)[0]
+        cert_signature_remainder_tag = certificate_bytes.take(2)
+        assert (cert_signature_remainder_tag == b'\x5f\x38')
+        cert_signature_remainder_length = certificate_bytes.take(1)[0]
+        self.cert_signature_remainder = certificate_bytes.take(cert_signature_remainder_length)
 
         assert (certificate_bytes.completely_processed())
 
@@ -57,7 +56,7 @@ class VdvKa:
         print(f'Signature:            {self.signature.hex(" ")}\n'
               f'Version:              {self.version.hex(" ")}\n'
               f'Cert signature:       {self.cert_signature.hex(" ")}\n'
-              f'Cert Public Exponent: {self.cert_pub_exponent}\n'
+              f'Cert sig remainder:   {self.cert_signature_remainder.hex(" ")}\n'
               f'CAR:                  {self.car.hex(" ")}')
 
 
