@@ -6,8 +6,8 @@ If you find mistakes or want to add information, a PR would be appreciated.
 ## What it does
 
 Parses the [Aztec](https://en.wikipedia.org/wiki/Aztec_Code) code data of a Deutschlandticket.
-It is only a dumb parser so far.
-It doesn't do any signature verification or further processing.
+It verifies the signatures and recovers the ticket data stored inside them.
+It checks neither the validity dates of the certificates nor their revocation status.
 Feel free to add this functionality with a pull request.
 
 ## How to use
@@ -34,3 +34,15 @@ See [Interoperabilität Barcode DB Online-Ticket VDV-KA](https://www.eticket-deu
 for more information about the compatibility between the UIC and the VDV-KA standard.
 In a nutshell, they use the same Aztec 2D-barcode representation,
 but after scanning the ticket it needs to be processed differently.
+
+### Public keys
+
+Most of the ticket data is stored inside the signature (ISO 9796-2 message recovery).
+Recovering it requires the public key of the CA named by the CAR at the end of the Aztec code.
+That key decodes the CV certificate, and the CV certificate's key decodes the ticket.
+
+`certs/` holds these CA keys, named `<CAR in hex>.vdv-cert`.
+A ticket with a CAR that has no matching file fails with a `FileNotFoundError`.
+The keys come from the [KItinerary](https://github.com/KDE/kitinerary/tree/master/src/lib/vdv/certs) project,
+which strips the certificates published by VDV down to the public keys:
+`ldap://ldap-vdv-ion.telesec.de:389/ou=VDV%20KA,o=VDV%20Kernapplikations%20GmbH,c=de`
